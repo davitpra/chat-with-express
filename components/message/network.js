@@ -1,5 +1,6 @@
 const express = require ("express")
-const { success, error } = require("../../network/response");
+const response = require("../../network/response");
+const controller = require('./controller')
 
 const router = express.Router();
 
@@ -11,12 +12,24 @@ router.get('/',(req,res)=>{
     success(req, res, 'Lista de mensajes');
 });
 
-router.post('/',(req,res)=>{
-    console.log(req.query);
-    if(req.query.error == 'ok'){
-        error(req, res, 'Error inesperado', 500, 'Es una simulación de errores');
-    } else{
-        success(req, res, 'Creado correctamente', 201);
+router.post('/',async (req,res)=>{
+    // obtenemos el usuario y el mensaje del body
+    const {user, message} = req.body
+
+    //manejamos el error
+    try {
+    // enviamos el usuario y el mensaje al controlador
+    const fullMessage = await controller.addMessage(user, message)
+    // si existe el mensaje mandamos el mensaje
+    if (fullMessage) {
+        response.success(req, res, fullMessage, 200);
+      } else {
+        // caso contrario manejamos el error
+        throw Error;
+      }
+    // lanzamos el error 
+    } catch (error) {
+        response.error(req, res, 'error en servidor', 500, 'detalles del error: ninguno, solo probando');
     }
 });
 
