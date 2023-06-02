@@ -31,8 +31,25 @@ const addMessage = async (user, message) => {
     }
   }
 
+  const updateMessage = async (id, message) => {
+    try {
+      // lanzamos un error si no encuentra el id o el mensaje
+      if (!id || !message) {
+        throw Error ("datos incorrectos")
+      }
+      //actualizamos el mensaje
+      const result = await store.updateText(id, message)
+      return result
+
+    } catch (error) {
+      console.log('Entra en error ', error);
+      return false;
+    }
+  }
+
   module.exports ={
     addMessage,
-    getMessage
+    getMessage,
+    updateMessage
   }
   

@@ -30,7 +30,18 @@ const getMessages = async () => {
     return messages
 }
 
+const updateText = async (id, text) => {
+    // encontramos el mensaje
+    const foundMessage= await Model.findById(id)
+    // cambiamos el mensaje
+    foundMessage.message = text
+    //salvamos
+    foundMessage.save()
+}
+
 module.exports = {
     add: addMessage,
-    list:getMessages
+    list:getMessages,
+    updateText
+
 }
