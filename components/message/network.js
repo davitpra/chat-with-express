@@ -6,10 +6,11 @@ const router = express.Router();
 
 router.get('/', async (req,res)=>{
     try {
-        // devolvemos los mensajes del controller
-        const allMessage = await controller.getMessage()
+        // traemos la query o por defecto null
+        const filterMesseges = req.query.user || null
+        // traemos los mensajes con el usuario
+        const allMessage = await controller.getMessage(filterMesseges)
         response.success(req, res, allMessage, 200)
-    // manejamos el error
     } catch (error) {
         response.error(req, res, 'Unexpected Error', 500, error);
     }

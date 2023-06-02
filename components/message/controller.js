@@ -20,10 +20,10 @@ const addMessage = async (user, message) => {
     }
   };
 
-  const getMessage = () => {
+  const getMessage = (filterUser) => {
     try {
       //obtenemos los mensajes
-     const allMessage = store.list()
+     const allMessage = store.list(filterUser)
      return allMessage
     } catch (error) {
       console.log('Entra en error ', error);
