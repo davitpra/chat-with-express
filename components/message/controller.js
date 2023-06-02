@@ -1,27 +1,38 @@
+const store = require ('./store')
 
 const addMessage = async (user, message) => {
-    // manejamos los errores con un try - catch
     try {
-        // lanzamos un error si no hay usuario o mensaje
       if (!user || !message) {
         console.log('no hay usuario o mensaje');
-        throw Error('no hay nada');
+        throw Error('datos incorrectos');
       }
-      //esquema de mensaje
       const fullMessage = {
         message: message,
         user: user,
         date: new Date(),
       };
-      //retornamos el mensaje
-      return fullMessage;
+      //anadimos en la capa de datos el mensaje
+      store.add(fullMessage);
+      console.log(fullMessage)
     } catch (error) {
-        // retornamos false
       console.log('Entra en error ', error);
       return false;
     }
   };
 
+  const getMessage = () => {
+    try {
+      //obtenemos los mensajes
+     const allMessage = store.list()
+     return allMessage
+    } catch (error) {
+      console.log('Entra en error ', error);
+      return false
+    }
+  }
+
   module.exports ={
     addMessage,
+    getMessage
   }
+  

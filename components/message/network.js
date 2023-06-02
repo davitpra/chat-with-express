@@ -4,32 +4,30 @@ const controller = require('./controller')
 
 const router = express.Router();
 
-router.get('/',(req,res)=>{
-    console.log(req.headers)
-    res.header({
-        "Custom-header":"Nuevo valor personalizado"
-    });
-    success(req, res, 'Lista de mensajes');
+router.get('/', async (req,res)=>{
+    try {
+        // devolvemos los mensajes del controller
+        const allMessage = await controller.getMessage()
+        response.success(req, res, allMessage, 200)
+    // manejamos el error
+    } catch (error) {
+        response.error(req, res, 'Unexpected Error', 500, error);
+    }
 });
 
 router.post('/',async (req,res)=>{
-    // obtenemos el usuario y el mensaje del body
     const {user, message} = req.body
 
-    //manejamos el error
     try {
-    // enviamos el usuario y el mensaje al controlador
+    // creamos un mensaje con el controller.
     const fullMessage = await controller.addMessage(user, message)
-    // si existe el mensaje mandamos el mensaje
     if (fullMessage) {
-        response.success(req, res, fullMessage, 200);
+        response.success(req, res, fullMessage, 201);
       } else {
-        // caso contrario manejamos el error
         throw Error;
       }
-    // lanzamos el error 
     } catch (error) {
-        response.error(req, res, 'error en servidor', 500, 'detalles del error: ninguno, solo probando');
+        response.error(req, res, 'error en servidor', 500, 'Invalid data');
     }
 });
 
