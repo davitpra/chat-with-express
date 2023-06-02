@@ -27,7 +27,7 @@ router.post('/',async (req,res)=>{
         throw Error;
       }
     } catch (error) {
-        response.error(req, res, 'error en servidor', 500, 'Invalid data');
+        response.error(req, res, 'error en servidor', 500, error);
     }
 });
 
