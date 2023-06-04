@@ -13,7 +13,6 @@ const addMessage = async (user, message) => {
       };
       //anadimos en la capa de datos el mensaje
       store.add(fullMessage);
-      console.log(fullMessage)
     } catch (error) {
       console.log('Entra en error ', error);
       return false;
@@ -38,7 +37,7 @@ const addMessage = async (user, message) => {
         throw Error ("datos incorrectos")
       }
       //actualizamos el mensaje
-      const result = await store.updateText(id, message)
+      const result = await store.update(id, message)
       return result
 
     } catch (error) {
@@ -47,9 +46,25 @@ const addMessage = async (user, message) => {
     }
   }
 
+  const deleteMessage = async (id) => {
+    try {
+      // lanzamos un error si no encuentra el id 
+      if (!id ) {
+        throw Error ("datos incorrectos")
+      }
+      //eliminamos de la db
+      await store.delete(id)
+      return true
+
+    } catch (error) {
+      console.log('Entra en error ', error);
+      return false;
+    }
+  }
   module.exports ={
     addMessage,
     getMessage,
-    updateMessage
+    updateMessage,
+    deleteMessage
   }
   

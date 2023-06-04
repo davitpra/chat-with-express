@@ -42,9 +42,16 @@ const updateText = async (id, text) => {
     foundMessage.save()
 }
 
+const deleteMessenges = async (id) => {
+  // encontramos el mensaje
+  return await Model.deleteOne({_id:id})
+
+}
+
 module.exports = {
     add: addMessage,
     list:getMessages,
-    updateText
+    update:updateText,
+    delete:deleteMessenges
 
 }

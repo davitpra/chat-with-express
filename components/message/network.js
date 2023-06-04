@@ -17,16 +17,11 @@ router.get('/', async (req,res)=>{
 });
 
 router.post('/',async (req,res)=>{
-    const {user, message} = req.body
-
     try {
-    // creamos un mensaje con el controller.
-    const fullMessage = await controller.addMessage(user, message)
-    if (fullMessage) {
-        response.success(req, res, fullMessage, 201);
-      } else {
-        throw Error;
-      }
+        const {user, message} = req.body
+        // creamos un mensaje con el controller.
+        await controller.addMessage(user, message)
+            .then ( () => {response.success(req, res, 'mensaje anadido', 201)})
     } catch (error) {
         response.error(req, res, 'error en servidor', 500, error);
     }
@@ -41,6 +36,21 @@ router.patch('/:id', async(req,res) =>{
         //actualizamos con el controler
         const updateMessage = await controller.updateMessage(id, message)
         response.success(req, res, updateMessage, 200)
+    }catch (error) {
+        response.error(req, res, "error en el servidor",500, error)
+    }
+
+})
+
+// creamos una ruta especifica para hacer el delete
+router.delete('/:id', async(req,res) =>{
+    try{
+        //obtenemos los parametros y el mensaje
+        const {id} = req.params
+        //eliminamos con el controler
+        await controller.deleteMessage(id)
+        response.success(req, res, `usario ${id} borrado`, 200)
+
     }catch (error) {
         response.error(req, res, "error en el servidor",500, error)
     }
