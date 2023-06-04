@@ -1,8 +1,11 @@
 const express = require ("express")
 const router = require('./network/routes')
+const dbConnection = require ('./db')
+const {uri} = require ('./config')
 
 const app = express ()
 
+dbConnection(uri)
 app.use(express.json());
 app.use(express.urlencoded({extended : false}));
 router(app)
