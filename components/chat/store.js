@@ -10,8 +10,14 @@ async function addChat(chat) {
   }
 }
 
-async function getChats() {
+async function getChats(userid) {
   try {
+    let filter = {}
+    if (userid) {
+      filter ={
+        users: userid
+      }
+    }
     return await Model.find().populate('users').exec()
   } catch (error) {
     console.log(error.message)

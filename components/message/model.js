@@ -3,6 +3,10 @@ const mongoose = require( 'mongoose')
 const Schema = mongoose.Schema
 // creamos un esquema que debe seguir los datos
 const mySchema = new Schema( {
+    chat: {
+        type:Schema.ObjectId,
+        ref: "Chat"
+    },
     user: {
         //tipo object id
         type:Schema.ObjectId,

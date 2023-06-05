@@ -1,12 +1,13 @@
 const store = require ('./store')
 
-const addMessage = async (user, message) => {
+const addMessage = async (user, message, chat) => {
     try {
       if (!user || !message) {
         console.log('no hay usuario o mensaje');
         throw Error('datos incorrectos');
       }
       const fullMessage = {
+        chat: chat,
         message: message,
         user: user,
         date: new Date(),

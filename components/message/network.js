@@ -18,9 +18,9 @@ router.get('/', async (req,res)=>{
 
 router.post('/',async (req,res)=>{
     try {
-        const {user, message} = req.body
+        const {user, message, chat} = req.body
         // creamos un mensaje con el controller.
-        await controller.addMessage(user, message)
+        await controller.addMessage(user, message, chat)
         response.success(req, res, 'mensaje anadido', 201)
     } catch (error) {
         response.error(req, res, 'error en servidor', 500, error);

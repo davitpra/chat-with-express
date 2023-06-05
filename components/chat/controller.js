@@ -1,22 +1,26 @@
 const store = require('./store')
 
-async function addChat(chat) {
+async function addChat(users) {
   try {
-    if (!chat.users) {
-      console.log('[ERROR] [CHAT CONTROLLER] No hay usuarios')
+    if (!users) {
+      console.log('No users')
       throw new Error()
     }
+    const chat = {
+      users
+    }
+
     return await store.addChat(chat)
   } catch (error) {
-    throw new Error('Datos incorrectos')
+    throw new Error('incorect data')
   }
 }
 
-async function getChats() {
+async function getChats(userid) {
   try {
-    return await store.getChats()
+    return await store.getChats(userid)
   } catch (error) {
-    throw new Error('Error al obtener los datos')
+    throw new Error('Error throw get data')
   }
 }
 
