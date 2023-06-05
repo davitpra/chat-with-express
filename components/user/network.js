@@ -22,7 +22,7 @@ router.post('/',async (req,res)=>{
         const {name} = req.body
         // creamos un nombre al usuaio con el controller.
         await controller.addUser(name)
-            .then ( () => {response.success(req, res, 'usuario anadido', 201)})
+            .then ( () => {response.success(req, res, 'User added', 201)})
     } catch (error) {
         response.error(req, res, 'error en servidor', 500, error);
     }

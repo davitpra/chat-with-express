@@ -7,14 +7,18 @@ const addMessage =  (message) => {
     myMessage.save();
   }
 
-const getMessages = async (filterUser) => {
+const getMessages = async (filterUser) => {  
     let filter = {}
     if (filterUser !== null) {
       filter = { user: filterUser}
     }
     const messages = await Model.find(filter)
+      // le da la relacion al campo user 
+      .populate('user')
+      // ejecuta la relacion 
+      .exec()
     return messages
-}
+  }
 
 const updateText = async (id, text) => {
     // encontramos el mensaje

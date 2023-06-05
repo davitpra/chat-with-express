@@ -21,7 +21,7 @@ router.post('/',async (req,res)=>{
         const {user, message} = req.body
         // creamos un mensaje con el controller.
         await controller.addMessage(user, message)
-            .then ( () => {response.success(req, res, 'mensaje anadido', 201)})
+        response.success(req, res, 'mensaje anadido', 201)
     } catch (error) {
         response.error(req, res, 'error en servidor', 500, error);
     }
@@ -49,7 +49,7 @@ router.delete('/:id', async(req,res) =>{
         const {id} = req.params
         //eliminamos con el controler
         await controller.deleteMessage(id)
-        response.success(req, res, `usario ${id} borrado`, 200)
+        response.success(req, res, `message ${id} deleted`, 200)
 
     }catch (error) {
         response.error(req, res, "error en el servidor",500, error)
