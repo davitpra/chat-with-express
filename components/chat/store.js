@@ -18,14 +18,20 @@ async function getChats(userid) {
         users: userid
       }
     }
-    return await Model.find().populate('users').exec()
+    return await Model.find(filter).populate('users').exec()
   } catch (error) {
     console.log(error.message)
     throw new Error('Unexpected error')
   }
 }
+const deleteChat= async (id) => {
+  // encontramos el chat
+  return await Model.deleteOne({_id:id})
+
+}
 
 module.exports = {
   addChat,
-  getChats
+  getChats,
+  delete: deleteChat
 }

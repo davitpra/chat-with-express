@@ -1,16 +1,24 @@
 const store = require ('./store')
 
-const addMessage = async (user, message, chat) => {
+const addMessage = async (user, message, chat, file) => {
     try {
       if (!user || !message) {
         console.log('no hay usuario o mensaje');
         throw Error('datos incorrectos');
       }
+      // seteamos una url vacia
+      let fileUrl = ''
+      //si existe file guardamos su url
+      if (file) {
+        fileUrl = `http://localhost:3000/app/files/${file.filename}`
+      }
+      // escribirmos en nuevo formato de message
       const fullMessage = {
         chat: chat,
         message: message,
         user: user,
         date: new Date(),
+        file:fileUrl
       };
       //anadimos en la capa de datos el mensaje
       store.add(fullMessage);

@@ -1,8 +1,15 @@
 const express = require ("express")
+const multer = require ( 'multer')
+
 const response = require("../../network/response");
 const controller = require('./controller')
 
 const router = express.Router();
+// config para guardar archivos
+const upload = multer ({
+    // donde quiero que lo guarde
+    dest: "public/files/"
+})
 
 router.get('/', async (req,res)=>{
     try {
@@ -16,15 +23,20 @@ router.get('/', async (req,res)=>{
     }
 });
 
-router.post('/',async (req,res)=>{
-    try {
-        const {user, message, chat} = req.body
-        // creamos un mensaje con el controller.
-        await controller.addMessage(user, message, chat)
-        response.success(req, res, 'mensaje anadido', 201)
-    } catch (error) {
-        response.error(req, res, 'error en servidor', 500, error);
-    }
+router.post('/',
+// ejecutamos multer como un solo archivo llamado file
+    upload.single('file'),
+    async (req,res)=>{
+        try {
+            const {user, message, chat} = req.body
+            //obtenemos el file
+            const file = req.file
+            // creamos un mensaje con el controller.
+            const responseMessage = await controller.addMessage(user, message, chat, file)
+            response.success(req, res, responseMessage , 201)
+        } catch (error) {
+            response.error(req, res, 'error en servidor', 500, error);
+        }
 });
 
 // creamos una ruta especifica para hacer el patch

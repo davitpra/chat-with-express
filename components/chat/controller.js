@@ -24,7 +24,16 @@ async function getChats(userid) {
   }
 }
 
+async function deleteChat(id) {
+  try {
+    return await store.delete(id)
+  } catch (error) {
+    throw new Error('Error throw get data')
+  }
+}
+
 module.exports = {
   addChat,
-  getChats
+  getChats,
+  deleteChat
 }

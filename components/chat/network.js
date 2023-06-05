@@ -12,6 +12,7 @@ router.post('/', async (req, res) => {
     response.error(req, res, 'Información inválida', 400, error.message)
   }
 })
+
 router.get('/:userid', async (req, res) => {
   try {
     const {userid} = req.params
@@ -20,6 +21,20 @@ router.get('/:userid', async (req, res) => {
   } catch (error) {
     response.error(req, res, 'Unexpected error', 500, error)
   }
+})
+
+
+router.delete('/:id', async(req,res) =>{
+  try{
+      const {id} = req.params
+      //eliminamos con el controler
+      await controller.deleteChat(id)
+      response.success(req, res, `chat ${id} deleted`, 200)
+
+  }catch (error) {
+      response.error(req, res, "service error",500, error)
+  }
+
 })
 
 
