@@ -11,8 +11,6 @@ const Home = () => {
 
 	const getUsers = async () => {
 		const users = await (await fetch('/api/user')).json();
-		console.log(users)
-		console.log(users)
 		state.users = users.data;
 	};
 
