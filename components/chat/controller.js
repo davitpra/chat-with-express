@@ -1,39 +1,47 @@
-const store = require('./store')
+const store = require('./store');
 
-async function addChat(users) {
-  try {
-    if (!users) {
-      console.log('No users')
-      throw new Error()
-    }
-    const chat = {
-      users
-    }
+const createChat = async (users) => {
+	return new Promise(async (resolve, reject) => {
+		if (!users || users.length < 2) {
+			reject({
+				message: 'There are no users or are less than 2 users.',
+				internal: null,
+				status: 400,
+			});
+		} else {
+			try {
+				const myUsers = {
+					users,
+				};
+				const addedChat = await store.create(myUsers);
+				resolve(addedChat);
+			} catch (err) {
+				reject({
+					message: 'An internal error has occurred.',
+					internal: `Something went wrong with the chat store (createChat) \n ${err.message}`,
+					status: 500,
+				});
+			}
+		}
+	});
+};
 
-    return await store.addChat(chat)
-  } catch (error) {
-    throw new Error('incorect data')
-  }
-}
-
-async function getChats(userid) {
-  try {
-    return await store.getChats(userid)
-  } catch (error) {
-    throw new Error('Error throw get data')
-  }
-}
-
-async function deleteChat(id) {
-  try {
-    return await store.delete(id)
-  } catch (error) {
-    throw new Error('Error throw get data')
-  }
-}
+const getChats = (userId) => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			const chats = await store.getAll(userId);
+			resolve(chats);
+		} catch (err) {
+			reject({
+				message: 'An internal error has occurred.',
+				internal: `Something went wrong with the chat store (getChats) \n ${err.message}`,
+				status: 500,
+			});
+		}
+	});
+};
 
 module.exports = {
-  addChat,
-  getChats,
-  deleteChat
-}
+	createChat,
+	getChats,
+};

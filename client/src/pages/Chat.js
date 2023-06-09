@@ -30,6 +30,7 @@ const Chat = () => {
 	// Send a message when the user press the Enter key
 	const handleEnter = (e) => {
 		if (e.keyCode === 13) {
+			//// console.log('Enter pressed');
 			sendMessage();
 		}
 	};
@@ -92,7 +93,6 @@ const Chat = () => {
 		return <Navigate to="/user" />;
 	}
 
-	console.log(snap.currentUserId)
 	return (
 		<main className="w-full min-h-screen flex justify-center items-center md:text-2xl">
 			<section className="card shadow rounded-none bg-white w-full md:w-4/5 md:rounded-2xl md:my-4 lg:px-12">

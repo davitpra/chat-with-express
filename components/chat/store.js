@@ -1,37 +1,23 @@
-const Model = require('./model')
+const Model = require('./model');
 
-async function addChat(chat) {
-  try {
-    const myChat = new Model(chat)
-    return await myChat.save()
-  } catch (error) {
-    console.log(error.message)
-    throw new Error('Error saving')
-  }
-}
+const createChat = (users) => {
+	const newChat = new Model(users);
+	return newChat.save();
+};
 
-async function getChats(userid) {
-  try {
-    let filter = {}
-    if (userid) {
-      filter ={
-        users: userid
-      }
-    }
-    return await Model.find(filter).populate('users','name').exec()
-  } catch (error) {
-    console.log(error.message)
-    throw new Error('Unexpected error')
-  }
-}
-const deleteChat= async (id) => {
-  // encontramos el chat
-  return await Model.deleteOne({_id:id})
+const getChats = (userId) => {
+	let filter = {};
 
-}
+	if (userId) {
+		filter = {
+			users: userId,
+		};
+	}
+
+	return Model.find(filter).populate('users', 'name').exec();
+};
 
 module.exports = {
-  addChat,
-  getChats,
-  delete: deleteChat
-}
+	create: createChat,
+	getAll: getChats,
+};

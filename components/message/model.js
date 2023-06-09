@@ -1,25 +1,23 @@
-const mongoose = require( 'mongoose')
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const Schema = mongoose.Schema
+const messageSchema = new Schema({
+	chat: {
+		type: Schema.ObjectId,
+		ref: 'Chat',
+	},
+	user: {
+		type: Schema.ObjectId,
+		ref: 'User',
+	},
+	message: {
+		type: String,
+		required: true,
+	},
+	date: Date,
+	fileUrl: String,
+});
 
-const mySchema = new Schema( {
-    chat: {
-        type:Schema.ObjectId,
-        ref: "Chat"
-    },
-    user: {
-        type:Schema.ObjectId,
-        ref: "User"
-    },
-    message: {
-        type:String,
-        require:true
-    },
-    date: Date,
-    //guarmaos file
-    file: String
-})
+const model = mongoose.model('Message', messageSchema);
 
-const model = mongoose.model('Message', mySchema)
-
-module.exports = model
+module.exports = model;

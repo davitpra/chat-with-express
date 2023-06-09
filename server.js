@@ -1,35 +1,51 @@
-// Create a server
-const express = require ("express")
-const app = express ()
-const server = require("http").Server(app)
+// Create server
+const express = require('express');
+const app = express();
+const server = require('http').Server(app);
 
-// imports
-const cors= require ('cors')
-const {connect} = require('./socket')
-const router = require('./network/routes')
-const dbConnection = require ('./db')
+// Config
+const config = require('./config');
 
-//config
-const {uri, port} = require ('./config')
+// Imports
+const socket = require('./socket');
+const router = require('./network/routes');
+const db = require('./db');
+const cors = require('cors');
+const path = require('path');
 
-// Conection with db
-app.use(cors())
-dbConnection(uri)
+// PORT
+const PORT = config.port;
+
+// Body Parser
 app.use(express.json());
-app.use(express.urlencoded({extended : false}));
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
-//connection with socket
-connect (server)
-
-//router
-router(app)
+// Router set
+router(app);
 
 // ? Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'client/build')));
+app.get('*', (req, res) => {
+	res.sendFile(path.join(__dirname, 'client/build/index.html'));
+});
+// app.use('/app', express.static('./public'));
 
-// serve static files from public
-// app.use("/",  express.static ('public'))
+// Connection to the Websocket
+socket.connect(server);
 
-// listen server
-server.listen(port, ()=>{
-    console.log( `la aplication esta escuchando en el port http://localhost::${port}`);
+socket.socket.io.on('connection', (socket) => {
+	console.log('Someone has connected!');
+	socket.emit('message', 'TESTING');
+	socket.on('disconnect', () => {
+		console.log('user disconnected');
+	});
+});
+
+// Connect the database
+db.connect();
+
+// Listening server
+server.listen(PORT, () => {
+	console.log(`Listening on port http://localhost:${PORT}`);
 });

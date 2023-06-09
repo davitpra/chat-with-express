@@ -1,51 +1,49 @@
-const express = require('express')
-const router = express.Router()
-const response = require('../../network/response')
-const controller = require('./controller')
+const express = require('express');
+const response = require('../../network/response');
+const controller = require('./controller');
+const router = express.Router();
 
 router.post('/', async (req, res) => {
-  try {
-    const { users } = req.body
-    const newChat = await controller.addChat(users)
-    response.success(req, res, newChat, 201)
-  } catch (error) {
-    response.error(req, res, 'Información inválida', 400, error.message)
-  }
-})
+	const { users } = req.body;
+
+	try {
+		const addedChat = await controller.createChat(users);
+		response.success(req, res, 'Chat was created successfully', 201, addedChat);
+	} catch (err) {
+		response.error(req, res, err.message, err.status, err.internal);
+	}
+});
 
 router.get('/', async (req, res) => {
-  try {
-    const allChats = await controller.getChats()
-    response.success(req, res, allChats, 200)
-  } catch (error) {
-    response.error(req, res, 'Unexpected error', 500, error)
-  }
-})
+	try {
+		const allChats = await controller.getChats();
+		response.success(
+			req,
+			res,
+			'Chats were retrieved successfully.',
+			200,
+			allChats
+		);
+	} catch (err) {
+		response.error(req, res, err.message, err.status, err.internal);
+	}
+});
 
-router.get('/:userid', async (req, res) => {
-  try {
-    const {userid} = req.params
-    const chatsList = await controller.getChats(userid)
-    response.success(req, res, chatsList, 200)
-  } catch (error) {
-    response.error(req, res, 'Unexpected error', 500, error)
-  }
-})
+router.get('/:userId', async (req, res) => {
+	const { userId } = req.params;
 
+	try {
+		const chats = await controller.getChats(userId);
+		response.success(
+			req,
+			res,
+			'Chats were retrieved successfully.',
+			200,
+			chats
+		);
+	} catch (err) {
+		response.error(req, res, err.message, err.status, err.internal);
+	}
+});
 
-
-router.delete('/:id', async(req,res) =>{
-  try{
-      const {id} = req.params
-      //eliminamos con el controler
-      await controller.deleteChat(id)
-      response.success(req, res, `chat ${id} deleted`, 200)
-
-  }catch (error) {
-      response.error(req, res, "service error",500, error)
-  }
-
-})
-
-
-module.exports = router
+module.exports = router;

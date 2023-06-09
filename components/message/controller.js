@@ -1,83 +1,107 @@
-const { socket } = require('../../socket');
-const store = require ('./store')
+const config = require('../../config');
+const store = require('./store');
 
-const addMessage = async (user, message, chat, file) => {
-    try {
-      if (!user || !message) {
-        console.log('no hay usuario o mensaje');
-        throw Error('datos incorrectos');
-      }
-      // seteamos una url vacia
-      let fileUrl = ''
-      //si existe file guardamos su url
-      if (file) {
-        fileUrl = `http://localhost:3000/app/files/${file.filename}`
-      }
-      // escribirmos en nuevo formato de message
-      const fullMessage = {
-        chat: chat,
-        message: message,
-        user: user,
-        date: new Date(),
-        file:fileUrl
-      };
-      //anadimos en la capa de datos el mensaje
-      await store.add(fullMessage);
-      // enviamos el mensaje por el socket
-      socket.io.emit('message', fullMessage)
+const getMessages = (query) => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			const messages = await store.getAll(query);
+			resolve(messages);
+		} catch (err) {
+			reject({
+				message: 'An internal error has occurred.',
+				internal: `There's an error on the messages store (getMessages) \n ${err.message}`,
+				status: 500,
+			});
+		}
+	});
+};
 
-    } catch (error) {
-      console.log('Entra en error ', error);
-      return false;
-    }
-  };
+const addMessage = (chat, user, message, file) => {
+	return new Promise(async (resolve, reject) => {
+		if (!chat || !user || !message) {
+			reject({
+				message: "There's no user, message or chat.",
+				internal: null,
+				status: 400,
+			});
+		} else {
+			let fileUrl = '';
 
-  const getMessage = async (query) => {
-    try {
-      //obtenemos los mensajes
-     const allMessage = await store.list(query)
-     return allMessage
-    } catch (error) {
-      console.log('Entra en error ', error);
-      return false
-    }
-  }
+			if (file) {
+				fileUrl = `http://${config.host}/app/files/${file.filename}`;
+			}
 
-  const updateMessage = async (id, message) => {
-    try {
-      // lanzamos un error si no encuentra el id o el mensaje
-      if (!id || !message) {
-        throw Error ("datos incorrectos")
-      }
-      //actualizamos el mensaje
-      const result = await store.update(id, message)
-      return result
+			const newFullMessage = {
+				chat,
+				user,
+				message,
+				date: new Date(),
+				fileUrl,
+			};
 
-    } catch (error) {
-      console.log('Entra en error ', error);
-      return false;
-    }
-  }
+			try {
+				const newMessage = await store.add(newFullMessage);
+				resolve(newMessage);
+			} catch (err) {
+				reject({
+					message: 'An internal error has occurred.',
+					internal: `Something went wrong with the message store (addMessage) \n ${err.message}`,
+					status: 500,
+				});
+			}
+		}
+	});
+};
 
-  const deleteMessage = async (id) => {
-    try {
-      // lanzamos un error si no encuentra el id 
-      if (!id ) {
-        throw Error ("datos incorrectos")
-      }
-      //eliminamos de la db
-      await store.delete(id)
-      return true
+const updateMessage = (id, message) => {
+	return new Promise(async (resolve, reject) => {
+		if (!id || !message) {
+			reject({
+				message: 'Invalid data.',
+				internal: null,
+				status: 400,
+			});
+		}
 
-    } catch (error) {
-      console.log('Entra en error ', error);
-      return false;
-    }
-  }
-  module.exports ={
-    addMessage,
-    getMessage,
-    updateMessage,
-    deleteMessage
-  }
-  
+		try {
+			const updatedMessage = await store.update(id, message);
+			resolve(updatedMessage);
+		} catch (err) {
+			reject({
+				message: 'An internal error has occurred.',
+				internal: `Something went wrong with the message store (updateMessage)\n ${err.message}`,
+				status: 500,
+			});
+		}
+	});
+};
+
+const deleteMessage = (id) => {
+	return new Promise(async (resolve, reject) => {
+		if (!id) {
+			reject({
+				message: 'Invalid data.',
+				internal: null,
+				status: 400,
+			});
+		}
+
+		try {
+			const deletedMessage = await store.delete(id);
+			resolve(deletedMessage);
+		} catch (err) {
+			reject({
+				message: 'An internal error has ocurred.',
+				internal: `Something went wrong with  the message store (deleteMessage)\n ${err.message}`,
+				status: 500,
+			});
+		}
+	});
+};
+
+module.exports = {
+	getMessages,
+	addMessage,
+	updateMessage,
+	deleteMessage,
+};

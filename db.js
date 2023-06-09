@@ -1,13 +1,17 @@
 const db = require('mongoose');
+const config = require('./config');
+const chalk = require('chalk');
 
-async function dbConnection(uri) {
-    //nos conectamos a la db
-    await db.connect(uri, { 
-         useNewUrlParser: true,
-         useUnifiedTopology: true 
-        })
-      .then(() => console.log('[db] Conectada con éxito'))
-      .catch(err => console.error('[db]', err))
-}
+const connect = async () => {
+	try {
+		await db.set('strictQuery', false)
+		await db.connect(config.uri, { useNewUrlParser: true });
+		console.log(chalk.blue('[db] Database was connected successfully.'));
+	} catch (err) {
+		console.error(chalk.red("[db] Can't connect to the database."));
+	}
+};
 
-module.exports = dbConnection
+module.exports = {
+	connect,
+};
