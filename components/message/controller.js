@@ -1,3 +1,4 @@
+const { socket } = require('../../socket');
 const store = require ('./store')
 
 const addMessage = async (user, message, chat, file) => {
@@ -22,6 +23,9 @@ const addMessage = async (user, message, chat, file) => {
       };
       //anadimos en la capa de datos el mensaje
       store.add(fullMessage);
+      // enviamos el mensaje por el socket
+      socket.io.emit('message', fullMessage)
+
     } catch (error) {
       console.log('Entra en error ', error);
       return false;
