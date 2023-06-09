@@ -22,7 +22,7 @@ const addMessage = async (user, message, chat, file) => {
         file:fileUrl
       };
       //anadimos en la capa de datos el mensaje
-      store.add(fullMessage);
+      await store.add(fullMessage);
       // enviamos el mensaje por el socket
       socket.io.emit('message', fullMessage)
 
@@ -32,10 +32,10 @@ const addMessage = async (user, message, chat, file) => {
     }
   };
 
-  const getMessage = (filterUser) => {
+  const getMessage = async (query) => {
     try {
       //obtenemos los mensajes
-     const allMessage = store.list(filterUser)
+     const allMessage = await store.list(query)
      return allMessage
     } catch (error) {
       console.log('Entra en error ', error);

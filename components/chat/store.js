@@ -18,7 +18,7 @@ async function getChats(userid) {
         users: userid
       }
     }
-    return await Model.find(filter).populate('users').exec()
+    return await Model.find(filter).populate('users','name').exec()
   } catch (error) {
     console.log(error.message)
     throw new Error('Unexpected error')

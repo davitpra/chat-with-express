@@ -1,16 +1,22 @@
 const Model = require('./model');
 
-const addMessage =  (message) => {
+const addMessage =  async (message) => {
+  try {
     //creamos un nuevo objeto con message
     const myMessage = new Model(message);
     // lo guardamos en la db
-    myMessage.save();
+    await myMessage.save();
+    return myMessage
+  } catch (e) {
+    throw new Error(err);
+  }
   }
 
-const getMessages = async (filterUser) => {  
+const getMessages = async (query) => {  
     let filter = {}
-    if (filterUser !== null) {
-      filter = { user: filterUser}
+    if (query) {
+      query.chat ? (filter.chat = query.chat) : null;
+      query.id ? (filter._id = query.id) : null;
     }
     const messages = await Model.find(filter)
       // le da la relacion al campo user 

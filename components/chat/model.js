@@ -8,7 +8,11 @@ const chatSchema = new Schema( {
           type: Schema.ObjectId,
           ref: 'User'
         }
-      ]
+      ],
+    date: {
+      type: Date,
+      default: new Date(),
+    },
 })
 
 const model = mongoose.model('chats', chatSchema)

@@ -13,6 +13,15 @@ router.post('/', async (req, res) => {
   }
 })
 
+router.get('/', async (req, res) => {
+  try {
+    const allChats = await controller.getChats()
+    response.success(req, res, allChats, 200)
+  } catch (error) {
+    response.error(req, res, 'Unexpected error', 500, error)
+  }
+})
+
 router.get('/:userid', async (req, res) => {
   try {
     const {userid} = req.params
@@ -22,6 +31,7 @@ router.get('/:userid', async (req, res) => {
     response.error(req, res, 'Unexpected error', 500, error)
   }
 })
+
 
 
 router.delete('/:id', async(req,res) =>{

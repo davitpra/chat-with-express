@@ -14,9 +14,9 @@ const upload = multer ({
 router.get('/', async (req,res)=>{
     try {
         // traemos la query o por defecto null
-        const filterMesseges = req.query.user || null
+        const query = req.query || null
         // traemos los mensajes con el usuario
-        const allMessage = await controller.getMessage(filterMesseges)
+        const allMessage = await controller.getMessage(query)
         response.success(req, res, allMessage, 200)
     } catch (error) {
         response.error(req, res, 'Unexpected Error', 500, error);
